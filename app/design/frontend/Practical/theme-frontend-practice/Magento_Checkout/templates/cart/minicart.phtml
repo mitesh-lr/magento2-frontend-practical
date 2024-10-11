@@ -1,0 +1,90 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var $block \Magento\Checkout\Block\Cart\Sidebar */
+/** @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer */
+?>
+
+<div data-block="minicart" class="minicart-wrapper">
+    <a class="action showcart" href="<?= $block->escapeUrl($block->getShoppingCartUrl()) ?>"
+       data-bind="scope: 'minicart_content'">
+       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0_3705_1176)">
+                <mask id="mask0_3705_1176" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
+                    <path d="M24 0H0V24H24V0Z" fill="white"/>
+                </mask>
+                <g mask="url(#mask0_3705_1176)">
+                    <path d="M24 0H0V24H24V0Z" fill="white"/>
+                    <path d="M23.5 6C23.5 6 22.3904 6.56982 21.2075 10.0701C20.2946 12.7715 19.3023 16.6218 18.8968 18.2388C18.7846 18.6865 18.3833 19 17.9218 19H12H6.07821C5.61668 19 5.21542 18.6865 5.10317 18.2388C4.69773 16.6218 3.70544 12.7715 2.79251 10.0701C1.60957 6.56982 0.5 6 0.5 6" stroke="black" stroke-linecap="round"/>
+                </g>
+            </g>
+            <defs>
+                <clipPath id="clip0_3705_1176">
+                    <rect width="24" height="24" fill="white"/>
+                </clipPath>
+            </defs>
+        </svg>
+
+        <span class="text"><?= $block->escapeHtml(__('My Cart')) ?></span>
+        <span class="counter qty empty"
+              data-bind="css: { empty: !!getCartParam('summary_count') == false && !isLoading() },
+               blockLoader: isLoading">
+            <span class="counter-number">
+                <!-- ko if: getCartParam('summary_count') -->
+                <!-- ko text: getCartParam('summary_count').toLocaleString(window.LOCALE) --><!-- /ko -->
+                <!-- /ko -->
+            </span>
+            <span class="counter-label">
+            <!-- ko if: getCartParam('summary_count') -->
+                <!-- ko text: getCartParam('summary_count').toLocaleString(window.LOCALE) --><!-- /ko -->
+                <!-- ko i18n: 'items' --><!-- /ko -->
+            <!-- /ko -->
+            </span>
+        </span>
+    </a>
+    <?php if ($block->getIsNeedToDisplaySideBar()):?>
+        <div class="block block-minicart"
+             data-role="dropdownDialog"
+             data-mage-init='{"dropdownDialog":{
+                "appendTo":"[data-block=minicart]",
+                "triggerTarget":".showcart",
+                "timeout": "2000",
+                "closeOnMouseLeave": false,
+                "closeOnEscape": true,
+                "triggerClass":"active",
+                "parentClass":"active",
+                "buttons":[]}}'>
+            <div id="minicart-content-wrapper" data-bind="scope: 'minicart_content'">
+                <!-- ko template: getTemplate() --><!-- /ko -->
+            </div>
+            <?= $block->getChildHtml('minicart.addons') ?>
+        </div>
+    <?php else: ?>
+        <?php $scriptString = <<<script
+            require(['jquery'], function ($) {
+                $('a.action.showcart').on('click', function() {
+                    $(document.body).trigger('processStart');
+                });
+            });
+script;
+        ?>
+        <?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false); ?>
+    <?php endif ?>
+    <?= /* @noEscape */ $secureRenderer->renderTag('script', [], 'window.checkout = ' .
+     /* @noEscape */ $block->getSerializedConfig(), false); ?>
+    <script type="text/x-magento-init">
+    {
+        "[data-block='minicart']": {
+            "Magento_Ui/js/core/app": <?= /* @noEscape */ $block->getJsLayout() ?>
+        },
+        "*": {
+            "Magento_Ui/js/block-loader": "<?= $block->escapeJs(
+                $block->escapeUrl($block->getViewFileUrl('images/loader-1.gif'))
+            ) ?>"
+        }
+    }
+    </script>
+</div>

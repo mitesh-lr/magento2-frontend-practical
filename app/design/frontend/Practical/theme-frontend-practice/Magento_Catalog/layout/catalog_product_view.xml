@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <container name="product.media.information" htmlTag="div" htmlClass="product-media-information"/>
+        </referenceContainer>
+
+        <move element="product.info.media" destination="product.media.information" before="-" />
+        <move element="product.info.main" destination="product.media.information" before="top.links" />
+        <move element="product.info.details" destination="product.media.information" after="minicart" />
+        <move element="product.info.social" destination="product.info.media" after="-" />
+
+        <referenceContainer name="breadcrumbs" remove="true"/>
+        <referenceContainer name="product.info.review" remove="true"/>
+        <referenceContainer name="view.addto.compare" remove="true"/>
+        <referenceContainer name="product.info.stock.sku" remove="true"/>
+    </body>
+</page>

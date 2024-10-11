@@ -1,0 +1,35 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/**
+ * @var \Magento\Customer\Block\Account\AuthorizationLink $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+$dataPostParam = '';
+if ($block->isLoggedIn()) {
+    $dataPostParam = sprintf(" data-post='%s'", $block->getPostParams());
+}
+?>
+<li class="link authorization-link" data-label="<?= $escaper->escapeHtml(__('or')) ?>">
+    <a <?= /* @noEscape */ $block->getLinkAttributes() ?>
+        <?= /* @noEscape */ $dataPostParam ?>>
+
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0_11909_956)">
+                <rect width="24" height="24" fill="white"/>
+                <circle cx="12.5" cy="8" r="3" stroke="black"/>
+                <path d="M6 19.1924C6 15.6025 8.91015 12.6924 12.5 12.6924C16.0899 12.6924 19 15.6025 19 19.1924" stroke="black" stroke-linecap="round"/>
+            </g>
+            <defs>
+                <clipPath id="clip0_11909_956">
+                    <rect width="24" height="24" fill="white"/>
+                </clipPath>
+            </defs>
+        </svg>
+
+    </a>
+</li>
+

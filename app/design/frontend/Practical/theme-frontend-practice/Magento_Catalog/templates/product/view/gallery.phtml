@@ -1,0 +1,80 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+/**
+ * Product media data template
+ *
+ * @var $block \Magento\Catalog\Block\Product\View\Gallery
+ * @var $escaper \Magento\Framework\Escaper
+ */
+?>
+
+<?php
+$images = $block->getGalleryImages()->getItems();
+$mainImage = current(array_filter($images, function ($img) use ($block) {
+    return $block->isMainImage($img);
+}));
+
+if (!empty($images) && empty($mainImage)) {
+    $mainImage = $block->getGalleryImages();
+}
+
+$helper = $block->getData('imageHelper');
+$mainImageData = $mainImage ?
+    $mainImage->getData('medium_image_url') :
+    $helper->getDefaultPlaceholderUrl('image');
+$imageWidth = $block->getImageAttribute('product_page_image_medium', 'width');
+$imageHeight = $block->getImageAttribute('product_page_image_medium', 'height');
+
+?>
+
+<div class="gallery-images <?php if (count($images) >= 5) { echo "annotation"; } ?>">
+    <?php foreach ($images as $image): ?>
+        <img
+            alt="<?= /* @noEscape */ $escaper->escapeHtml($image->getLabel()) ?>"
+            class="gallery-image"
+            src="<?= /* @noEscape */ $image->getData('medium_image_url') ?>"
+            width="<?= /* @noEscape */ $imageWidth ?>"
+            height="<?= /* @noEscape */ $imageHeight ?>"
+        />
+    <?php endforeach; ?>
+</div>
+
+<?php // phpcs:ignore Magento2.Legacy.PhtmlTemplate ?>
+
+<script>
+    require(['jquery', 'slick'], function($) {
+        $(document).ready(function() {
+            var $slider = $('.gallery-images');
+
+            function initSlick() {
+                if ($(window).width() <= 768) { // Only initialize for mobile view
+                    if (!$slider.hasClass('slick-initialized')) {
+                        $slider.slick({
+                            dots: true,              // Show navigation dots
+                            arrows: false,           // Disable navigation arrows
+                            infinite: true,          // Infinite looping
+                            speed: 500,              // Transition speed
+                            slidesToShow: 1,         // Number of slides to show
+                            slidesToScroll: 1
+                        });
+                    }
+                } else {
+                    if ($slider.hasClass('slick-initialized')) {
+                        $slider.slick('unslick'); // Destroy the Slick slider for larger screens
+                    }
+                }
+            }
+
+            // Initialize Slick on page load
+            initSlick();
+
+            // Reinitialize on window resize
+            $(window).on('resize', function() {
+                initSlick();
+            });
+        });
+    });
+</script>
