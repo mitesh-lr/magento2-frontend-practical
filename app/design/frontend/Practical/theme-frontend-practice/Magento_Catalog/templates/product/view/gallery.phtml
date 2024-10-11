@@ -29,15 +29,25 @@ $imageWidth = $block->getImageAttribute('product_page_image_medium', 'width');
 $imageHeight = $block->getImageAttribute('product_page_image_medium', 'height');
 
 ?>
-
-<div class="gallery-images <?php if (count($images) >= 5) { echo "annotation"; } ?>">
+<div class="gallery-placeholder gallery-images _block-content-loading <?php if (count($images) >= 5) { echo "annotation"; } ?>" style="display: none">
     <?php foreach ($images as $image): ?>
         <img
             alt="<?= /* @noEscape */ $escaper->escapeHtml($image->getLabel()) ?>"
             class="gallery-image"
             src="<?= /* @noEscape */ $image->getData('medium_image_url') ?>"
-            width="<?= /* @noEscape */ $imageWidth ?>"
-            height="<?= /* @noEscape */ $imageHeight ?>"
+            width="<?= $imageWidth ?>"
+            height="<?= $imageHeight ?>"
+        />
+    <?php endforeach; ?>
+</div>
+<div data-gallery-role="gallery-placeholder-custom" class="gallery-images <?php if (count($images) >= 5) { echo "annotation"; } ?>">
+    <?php foreach ($images as $image): ?>
+        <img
+            alt="<?= /* @noEscape */ $escaper->escapeHtml($image->getLabel()) ?>"
+            class="gallery-image"
+            src="<?= /* @noEscape */ $image->getData('medium_image_url') ?>"
+            width="<?= $imageWidth ?>"
+            height="<?= $imageHeight ?>"
         />
     <?php endforeach; ?>
 </div>
